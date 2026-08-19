@@ -132,7 +132,11 @@ type AppState = {
   openCurrentMonth: () => void;
   login: (provider: "telegram" | "google", name?: string) => Promise<void>;
   logout: () => void;
-  addTransaction: (input: Omit<Transaction, "id" | "date" | "pending">) => void;
+  addTransaction: (
+    input: Omit<Transaction, "id" | "date" | "pending"> & { date?: string },
+  ) => void;
+  updateTransaction: (id: string, patch: Partial<Omit<Transaction, "id">>) => void;
+  deleteTransaction: (id: string) => void;
   toggleSetting: (key: keyof Settings) => void;
   setAddTxOpen: (open: boolean) => void;
   balance: number;
@@ -258,13 +262,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => setUser(null), []);
 
   const addTransaction = useCallback(
-    (input: Omit<Transaction, "id" | "date" | "pending">) => {
+    (input: Omit<Transaction, "id" | "date" | "pending"> & { date?: string }) => {
       const id = `t${Date.now()}`;
+      const { date, ...rest } = input;
+      const iso = (() => {
+        if (!date) return new Date().toISOString();
+        const d = new Date(date);
+        return Number.isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+      })();
       // Optimistic insert: list + balance update instantly, then confirm.
-      setTransactions((prev) => [
-        { ...input, id, date: new Date().toISOString(), pending: true },
-        ...prev,
-      ]);
+      setTransactions((prev) => [{ ...rest, id, date: iso, pending: true }, ...prev]);
       setTimeout(() => {
         setTransactions((prev) =>
           prev.map((t) => (t.id === id ? { ...t, pending: false } : t)),
@@ -273,6 +280,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     [],
   );
+
+  const updateTransaction = useCallback(
+    (id: string, patch: Partial<Omit<Transaction, "id">>) => {
+      if (!id) return;
+      setTransactions((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, ...patch, id: t.id } : t)),
+      );
+    },
+    [],
+  );
+
+  const deleteTransaction = useCallback((id: string) => {
+    if (!id) return;
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   const toggleSetting = useCallback((key: keyof Settings) => {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -310,6 +332,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       addTransaction,
+      updateTransaction,
+      deleteTransaction,
       toggleSetting,
       setAddTxOpen,
       balance: totalIncome - totalExpense,
@@ -335,6 +359,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       addTransaction,
+      updateTransaction,
+      deleteTransaction,
       toggleSetting,
       totalIncome,
       totalExpense,
