@@ -60,6 +60,14 @@ export function AllTransactionsSheet({
 
   const [showFilters, setShowFilters] = useState(false);
   const closingRef = useRef(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  // A11y: move keyboard focus to the search field as soon as the sheet opens.
+  useEffect(() => {
+    if (!open) return;
+    const id = requestAnimationFrame(() => searchRef.current?.focus());
+    return () => cancelAnimationFrame(id);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
