@@ -132,7 +132,11 @@ type AppState = {
   openCurrentMonth: () => void;
   login: (provider: "telegram" | "google", name?: string) => Promise<void>;
   logout: () => void;
-  addTransaction: (input: Omit<Transaction, "id" | "date" | "pending">) => void;
+  addTransaction: (
+    input: Omit<Transaction, "id" | "date" | "pending"> & { date?: string },
+  ) => void;
+  updateTransaction: (id: string, patch: Partial<Omit<Transaction, "id">>) => void;
+  deleteTransaction: (id: string) => void;
   toggleSetting: (key: keyof Settings) => void;
   setAddTxOpen: (open: boolean) => void;
   balance: number;
