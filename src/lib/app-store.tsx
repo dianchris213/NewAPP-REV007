@@ -332,6 +332,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       addTransaction,
+      updateTransaction,
+      deleteTransaction,
       toggleSetting,
       setAddTxOpen,
       balance: totalIncome - totalExpense,
