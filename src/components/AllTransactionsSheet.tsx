@@ -123,7 +123,9 @@ export function AllTransactionsSheet({
         }
         const q = keyword.trim().toLowerCase();
         if (q) {
-          const haystack = `${t.category} ${t.note ?? ""}`.toLowerCase();
+          const amountRaw = String(t.amount ?? "");
+          const amountFmt = Number(t.amount ?? 0).toLocaleString("id-ID");
+          const haystack = `${t.category} ${t.note ?? ""} ${amountRaw} ${amountFmt}`.toLowerCase();
           if (!haystack.includes(q)) return false;
         }
         return true;
