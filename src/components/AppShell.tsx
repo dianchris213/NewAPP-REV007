@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Icon } from "./Icon";
+import { FullScreenModal } from "./FullScreenModal";
 import { AddTransactionSheet } from "./AddTransactionSheet";
 import { AllTransactionsSheet } from "./AllTransactionsSheet";
 import { useApp } from "@/lib/app-store";
