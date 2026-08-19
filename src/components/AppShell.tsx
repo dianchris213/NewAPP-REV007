@@ -58,7 +58,7 @@ export function TopBar({
   }, [displayName, displayAvatar]);
 
   const toggleNotif = useCallback(() => {
-    setNotifOpen((v) => {
+    setNotifOpen((v: boolean) => {
       if (!v) markNotificationsRead();
       return !v;
     });
