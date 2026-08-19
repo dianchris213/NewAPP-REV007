@@ -236,6 +236,7 @@ export function AllTransactionsSheet({
           <button
             type="button"
             aria-label="Reset filter"
+            data-testid="tx-reset-button"
             disabled={!hasActiveFilters}
             onClick={handleReset}
             className="mt-3 flex h-11 w-full items-center justify-center gap-1 rounded-full bg-surface-variant px-3 text-[12px] font-semibold text-on-surface-variant transition-transform active:scale-95 disabled:opacity-40"
