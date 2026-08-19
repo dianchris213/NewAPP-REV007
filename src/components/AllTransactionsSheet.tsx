@@ -159,6 +159,7 @@ export function AllTransactionsSheet({
           <button
             type="button"
             aria-label="Tutup"
+            data-testid="tx-close-button"
             onClick={handleClose}
             className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-variant text-on-surface-variant transition-transform active:scale-95"
           >
@@ -172,6 +173,7 @@ export function AllTransactionsSheet({
           type="button"
           aria-expanded={showFilters}
           aria-controls="tx-filter-panel"
+          data-testid="tx-filter-toggle"
           onClick={() => setShowFilters((v) => !v)}
           className="flex h-11 min-w-[48px] flex-1 items-center justify-center gap-1.5 rounded-full border border-outline-variant/30 bg-surface-container-high px-4 text-[12px] font-semibold text-on-surface-variant transition-transform active:scale-95"
         >
@@ -251,10 +253,12 @@ export function AllTransactionsSheet({
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant/70"
           />
           <input
+            ref={searchRef}
             type="search"
+            data-testid="tx-search-input"
             value={keyword}
             onChange={(e) => setTxFilters({ keyword: e.target.value })}
-            placeholder="Cari kategori atau catatan..."
+            placeholder="Cari kategori, catatan, atau nominal..."
             aria-label="Cari transaksi"
             className="h-11 w-full rounded-full border border-outline-variant/30 bg-surface-container-high pl-10 pr-4 text-[13px] text-on-surface outline-none placeholder:text-on-surface-variant/60 focus-visible:ring-2 focus-visible:ring-primary/60"
           />
